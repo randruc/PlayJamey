@@ -1,36 +1,57 @@
-
-
-console.log('Coucou');
-
-var gainL, gainR, source, audioElement;
+var gainL,
+    gainR,
+    gainMono,
+    AudioContext,
+    audioContext,
+    source,
+    range,
+    channelSplitter,
+    audioElement;
 
 function filechanged(e) {
-    audioElement = document.querySelector('audio');
-
     let files = e.files;
     let file = URL.createObjectURL(files[0]);
-    audioElement.src = file;
+    audioElement.src = file;    
+};
 
-    let AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioContext = new AudioContext();
-    let source = audioContext.createMediaElementSource(audioElement);
-    let channelSplitter = audioContext.createChannelSplitter(2);
+function rangechanged(e) {
+    if (e.value > 100) {
+        gainR.gain.value = 1;
+        gainL.gain.value = 1 - (e.value - 100) / 100;
+    } else if (e.value < 100) {
+        gainR.gain.value = e.value / 100;
+        gainL.gain.value = 1;
+    } else {
+        gainL.gain.value = 1;
+        gainR.gain.value = 1;
+    }
+}
+
+function center() {
+    range.value = 100;
+    range.dispatchEvent(new Event('change'));
+}
+
+window.onload = function () {
+    audioElement = document.querySelector('audio');
+    AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioContext = new AudioContext();
+    source = audioContext.createMediaElementSource(audioElement);
+    range = document.getElementById("range");
+
+    channelSplitter = audioContext.createChannelSplitter(2);
     gainL = audioContext.createGain();
     gainR = audioContext.createGain();
-    let gainMono = audioContext.createGain();
+    gainMono = audioContext.createGain();
 
     source.connect(channelSplitter);
 
     channelSplitter.connect(gainL, 0);
     channelSplitter.connect(gainR, 1);
 
-
     gainL.connect(gainMono);
     gainR.connect(gainMono);
     gainMono.connect(audioContext.destination);
-};
 
-function rangechanged(e) {
-    gainL.gain.value = (200 - e.value) / 200;
-    gainR.gain.value = e.value / 200;
+    center();
 }

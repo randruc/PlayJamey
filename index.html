@@ -1,15 +1,20 @@
-<html>
-<head>    
-</head>
-<body>
-    <input type="file" accept="audio/*" onchange="filechanged(this);" />
-    <br />
-    <audio controls></audio>
-    <br />
-    <input type="range" min="0" max="200" onchange="rangechanged(this);">
-    <br />
+<!doctype html>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script type="text/javascript" src="main.js"></script>
-</body>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Play Jamey!</title>    
+    </head>
+    <body>
+        <input type="file" accept="audio/*" onchange="filechanged(this);" />
+        <br />
+        <audio controls></audio>
+        <br />
+        Bass <input type="range" id="range" min="0" max="200" onchange="rangechanged(this);"> Piano
+        <br />
+        <input type="button" onclick="center();" value="Center"/>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+    </body>
 </html>
